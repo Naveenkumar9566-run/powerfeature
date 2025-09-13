@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "Sentry": {
+      "url": "https://mcp.sentry.dev/mcp/company-7n/powerfeature",
+      "type": "http"
+    }
+  }
+}
