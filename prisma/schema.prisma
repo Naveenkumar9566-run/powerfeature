@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id          String @id @default(uuid())
+  clerkUserId String @unique
+  email       String @unique
+  username    String @unique
+  name        String @unique
+
+  createAt    DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+
+model ContactSession {
+  id              String   @id @default(uuid())
+  name            String   @unique
+  email           String   @unique
+  organizationId  String
+  expiresAt       DateTime 
+
+  // Metadata fields expanded from v.object()
+  
+  userAgent        String?
+  language         String?
+  languages        String?
+  platform         String?
+  vendor           String?
+  screenResolution String?
+  viewportSize     String?
+  timezone         String?
+  timezoneOffset   Int?
+  cookieEnabled    Boolean?
+  referrer         String?
+  currentUrl       String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([organizationId], name: "by_organization_id")
+  @@index([expiresAt], name: "by_expires_at")
+}
+
+
