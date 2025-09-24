@@ -25,20 +25,19 @@ export async function POST(req: Request) {
         email,
         organizationId,
         expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24h expiry
-
-        // Metadata mapping (safe optional chaining)
-        userAgent: metadata?.userAgent,
-        language: metadata?.language,
-        languages: metadata?.languages,
-        platform: metadata?.platform,
-        vendor: metadata?.vendor,
-        screenResolution: metadata?.screenResolution,
-        viewportSize: metadata?.viewportSize,
-        timezone: metadata?.timezone,
-        timezoneOffset: metadata?.timezoneOffset,
-        cookieEnabled: metadata?.cookieEnabled,
-        referrer: metadata?.referrer,
-        currentUrl: metadata?.currentUrl,
+        userAgent: metadata?.userAgent ?? null,
+        language: metadata?.language ?? null,
+        languages: metadata?.languages ?? null,
+        platform: metadata?.platform ?? null,
+        vendor: metadata?.vendor ?? null,
+        screenResolution: metadata?.screenResolution ?? null,
+        viewportSize: metadata?.viewportSize ?? null,
+        timezone: metadata?.timezone ?? null,
+        timezoneOffset: metadata?.timezoneOffset ?? null,
+        cookieEnabled: metadata?.cookieEnabled ?? null,
+        referrer: metadata?.referrer ?? null,
+        currentUrl: metadata?.currentUrl ?? null,
+        // createdAt and updatedAt are handled by Prisma
       },
     });
 
@@ -46,8 +45,10 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error(" Error creating contact session:", error);
     return NextResponse.json(
-      { error: "Failed to create contact session" },
-      { status: 500 }
+      //{ error: "Failed to create contact session" },
+      //{ status: 500 }
+      { error: error instanceof Error ? error.message : String(error) },
+    { status: 500 }
     );
   }
 }
@@ -67,8 +68,10 @@ export async function GET(req: Request) {
   } catch (error) {
     console.error("Error fetching contact sessions:", error);
     return NextResponse.json(
-      { error: "Failed to fetch contact sessions" },
-      { status: 500 }
+      //{ error: "Failed to fetch contact sessions" },
+      //{ status: 500 }
+      { error: error instanceof Error ? error.message : String(error) },
+    { status: 500 }
     );
   }
 }

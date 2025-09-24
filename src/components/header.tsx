@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { checkUser } from "@/lib/checkUser";
-import OrganizationGuard from "./organization-guard";
+import OrganizationId from "./organization-guard";
 
 const Header = async () => {
   await checkUser();
@@ -13,7 +13,7 @@ const Header = async () => {
       <Image src="/logo.png" alt="" width="40" height="40" className="h-16 w-auto" />
       </Link>
       <div className="flex items-center gap-4">
-        <OrganizationGuard />
+        <OrganizationId />
       </div>
     </nav>
   )

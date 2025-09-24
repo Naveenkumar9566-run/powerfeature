@@ -1,7 +1,7 @@
 import { Button } from "./ui/button";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
-const OrganizationGuard = () => {
+const OrganizationId = () => {
   return (
     <div>
       <SignedOut>
@@ -16,4 +16,4 @@ const OrganizationGuard = () => {
   )
 }
 
-export default OrganizationGuard
+export default OrganizationId
