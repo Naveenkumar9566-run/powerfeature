@@ -48,3 +48,24 @@ export async function createContactSession(args: {
 
   return session.id;
 }
+
+export async function validateContactSession(contactSessionId: string) {
+  try {
+    const contactSession = await prisma.contactSession.findUnique({
+      where: { id: contactSessionId },
+    });
+
+    if (!contactSession) {
+      return { valid: false, reason: "contact session not found" };
+    }
+
+    if (contactSession.expiresAt < new Date()) {
+      return { valid: false, reason: "contact session expired" };
+    }
+
+    return { valid: true, contactSession };
+  } catch (error) {
+    console.error("Error validating contact session:", error);
+    return { valid: false, reason: "internal error" };
+  }
+}

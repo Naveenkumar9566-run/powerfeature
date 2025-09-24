@@ -10,15 +10,21 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAtomValue, useSetAtom } from "jotai";
+import { organizationIdAtom } from "@/modules/widget/atoms/widget-atoms";
+import React from "react";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
 });
 
-const WidgetScreen = () => {
+
+
+function WidgetScreen() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,7 +33,18 @@ const WidgetScreen = () => {
     },
   });
 
-const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  //const organizationId = useAtomValue(organizationIdAtom);
+  const setOrganizationId = useSetAtom(organizationIdAtom);
+React.useEffect(() => {
+  setOrganizationId("demo-org-id"); // Replace with your actual org id
+}, [setOrganizationId]);
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+if (!setOrganizationId) {
+    console.error("Organization ID is missing");
+    alert("Organization ID is required to create a session.");
+    return;
+  }
 
     // collect metadata
     const metadata = {
@@ -49,17 +66,31 @@ const onSubmit = async (values: z.infer<typeof formSchema>) => {
       const res = await fetch("/api/contact-sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...values, metadata }),
+        body: JSON.stringify({ ...values, setOrganizationId, metadata }),
       });
 
-      if (!res.ok) throw new Error("Failed to create session");
-
+      /*if (!res.ok) throw new Error("Failed to create session");
+      
       const data = await res.json();
       console.log("Contact session created:", data);
     } catch (err) {
       console.error("Error creating contact session:", err);
     }
   };
+*/
+  if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || "Failed to create session");
+    }
+
+    const data = await res.json();
+    console.log("Contact session created:", data);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      console.error("Error creating contact session:", errorMessage);
+      alert("Error creating contact session: " + errorMessage);
+    }
+};
 
   return (
     <>
@@ -122,6 +153,6 @@ const onSubmit = async (values: z.infer<typeof formSchema>) => {
       </Form>
     </>
   );
-};
+}
 
 export default WidgetScreen;

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/header";
 import { ClerkProvider} from "@clerk/nextjs"
+import {Provider} from "jotai";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +34,9 @@ export default function RootLayout({
         {/* header */}
         <Header />
         <main className="min-h-screen bg-gradient-to-b from-blue-300 to-white">
+          <Provider>
         {children}
+         </Provider>
         </main>
         {/* footer */}
         <footer className="bg-blue-100 py-12">

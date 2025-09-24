@@ -30,7 +30,7 @@ model User {
 model ContactSession {
   id              String   @id @default(uuid())
   name            String   @unique
-  email           String   @unique
+  email           String   
   organizationId  String
   expiresAt       DateTime 
 
@@ -49,11 +49,28 @@ model ContactSession {
   referrer         String?
   currentUrl       String?
 
-  createdAt       DateTime @default(now())
+  createdAt        DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  @@index([organizationId], name: "by_organization_id")
+  //@@index([organizationId], name: "by_organization_id")
   @@index([expiresAt], name: "by_expires_at")
 }
 
+model Conversation {
+  id             String   @id @default(uuid())
+  threadId       String   @unique
+  organizationId String
+  status         Status   @default(UNRESOLVED)
 
+  updatedAt       DateTime @default(now())
+
+  @@index([organizationId], name: "by_organization_id")
+  @@index([threadId], name: "by_thread_id")
+  @@index([status, organizationId], name: "by_status_and_organization_id")
+}
+
+enum Status {
+  UNRESOLVED
+  ESCALATED
+  RESOLVED
+}
